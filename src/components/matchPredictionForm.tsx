@@ -1,7 +1,8 @@
 import { useState, useCallback } from "react"
 import { PredictionRequestData, PredictionResponseData } from "@/types"
 import { Constants as Const } from "@/utils/constants"
-import { Box, Button, Select } from "@chakra-ui/react"
+import { Box, Button, Flex, Select, Text } from "@chakra-ui/react"
+import Image from "next/image"
 
 type Props = {
   setResult: React.Dispatch<React.SetStateAction<string>>
@@ -57,21 +58,47 @@ export const MatchPredictionForm = ({ setResult }: Props) => {
     </option>
   ))
 
+  const teamImage = (team: string) => {
+    return (
+      <Box mt={5}>
+        <Image
+          src={`/teams/${team}.png`}
+          width={200}
+          height={200}
+          alt="teamEmblemImage"
+        />
+      </Box>
+    )
+  }
+
   return (
     <form onSubmit={handleSubmit}>
       <Box mt={8}>
-        <Select
-          placeholder="Select Team 1"
-          onChange={(e) => setTeam1(e.target.value)}
-          required>
-          {selectOptions}
-        </Select>
-        <Select
-          placeholder="Select Team 2"
-          onChange={(e) => setTeam2(e.target.value)}
-          required>
-          {selectOptions}
-        </Select>
+        <Flex justifyContent="space-around">
+          <Box>
+            <Select
+              placeholder="Select Team 1"
+              onChange={(e) => setTeam1(e.target.value)}
+              required>
+              {selectOptions}
+            </Select>
+            {team1 && teamImage(team1)}
+          </Box>
+          <Box>
+            <Text fontSize="6xl" as="i">
+              vs
+            </Text>
+          </Box>
+          <Box>
+            <Select
+              placeholder="Select Team 2"
+              onChange={(e) => setTeam2(e.target.value)}
+              required>
+              {selectOptions}
+            </Select>
+            {team2 && teamImage(team2)}
+          </Box>
+        </Flex>
       </Box>
       <Box mt={8}>
         {isLoading ? (

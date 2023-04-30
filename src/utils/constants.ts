@@ -6,24 +6,24 @@ export const Constants = {
   },
   TEAMS: [
     "Arsenal",
-    "Aston Villa",
+    "AstonVilla",
     "Brentford",
     "Brighton",
     "Burnley",
     "Chelsea",
-    "Crystal Palace",
+    "CrystalPalace",
     "Everton",
     "Leeds",
     "Leicester",
     "Liverpool",
-    "manchester-city",
-    "manchester-united",
+    "ManchesterCity",
+    "ManchesterUnited",
     "Newcastle",
     "Norwich",
     "Southampton",
     "Tottenham",
     "Watford",
-    "West Ham",
-    "Wolve"
+    "WestHam",
+    "Wolves"
   ]
 }
