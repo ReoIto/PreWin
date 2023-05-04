@@ -88,6 +88,5 @@ export default async function handler(
   //     reason: "過去の試合の結果から予測"
   //   }
   // }
-
-  res.status(200).json({ teams: resultObj.teams, detail: resultObj.detail })
+  // res.status(200).json({ teams: resultObj.teams, detail: resultObj.detail })
 }
