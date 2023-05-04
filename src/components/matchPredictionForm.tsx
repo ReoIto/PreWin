@@ -1,27 +1,69 @@
 import { useState, useCallback } from "react"
 import { PredictionRequestData, PredictionResponseData } from "@/types"
 import { Constants as Const } from "@/utils/constants"
-import { Box, Button, Flex, Select, Text } from "@chakra-ui/react"
+import { Box, Button, Flex, Select, Text, Spinner } from "@chakra-ui/react"
 import Image from "next/image"
 
 type Props = {
-  setResult: React.Dispatch<React.SetStateAction<string>>
+  teams: {
+    team1: string
+    team2: string
+  }
+  setTeams: React.Dispatch<
+    React.SetStateAction<{
+      team1: string
+      team2: string
+    }>
+  >
+  setResult: React.Dispatch<
+    React.SetStateAction<{
+      teams: string[]
+      detail: {
+        winner: string
+        loser: string
+        score: {
+          firstHalf: number[]
+          secondHalf: number[]
+        }
+        totalScore: number[]
+        isDraw: boolean
+        reason: string
+      }
+    }>
+  >
 }
 
-export const MatchPredictionForm = ({ setResult }: Props) => {
-  const [team1, setTeam1] = useState("")
-  const [team2, setTeam2] = useState("")
+export const MatchPredictionForm = ({ teams, setTeams, setResult }: Props) => {
   const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
-      setResult("")
+
+      if (teams.team1 === teams.team2) {
+        alert("同じチームを選択することはできません")
+        return
+      }
+
+      setResult({
+        teams: ["", ""],
+        detail: {
+          winner: "",
+          loser: "",
+          score: {
+            firstHalf: [0, 0],
+            secondHalf: [0, 0]
+          },
+          totalScore: [0, 0],
+          isDraw: false,
+          reason: ""
+        }
+      })
       setIsLoading(true)
 
       const data: PredictionRequestData = {
-        team1,
-        team2
+        team1: teams.team1,
+        team2: teams.team2
       }
 
       const options = {
@@ -46,10 +88,10 @@ export const MatchPredictionForm = ({ setResult }: Props) => {
       }
 
       const responseData: PredictionResponseData = await response.json()
-      setResult(responseData.result)
+      setResult(responseData)
       setIsLoading(false)
     },
-    [team1, team2]
+    [teams, setResult, setIsLoading]
   )
 
   const selectOptions = Const.TEAMS.map((team) => (
@@ -77,12 +119,12 @@ export const MatchPredictionForm = ({ setResult }: Props) => {
         <Flex justifyContent="space-around">
           <Box>
             <Select
-              placeholder="Select Team 1"
-              onChange={(e) => setTeam1(e.target.value)}
+              placeholder="チームを選択してください"
+              onChange={(e) => setTeams({ ...teams, team1: e.target.value })}
               required>
               {selectOptions}
             </Select>
-            {team1 && teamImage(team1)}
+            {teams.team1 && teamImage(teams.team1)}
           </Box>
           <Box>
             <Text fontSize="6xl" as="i">
@@ -91,18 +133,29 @@ export const MatchPredictionForm = ({ setResult }: Props) => {
           </Box>
           <Box>
             <Select
-              placeholder="Select Team 2"
-              onChange={(e) => setTeam2(e.target.value)}
+              placeholder="チームを選択してください"
+              onChange={(e) => setTeams({ ...teams, team2: e.target.value })}
               required>
               {selectOptions}
             </Select>
-            {team2 && teamImage(team2)}
+            {teams.team2 && teamImage(teams.team2)}
           </Box>
         </Flex>
       </Box>
       <Box mt={8}>
         {isLoading ? (
-          <p>勝敗予測中...</p>
+          <Box textAlign="center">
+            <Spinner
+              thickness="6px"
+              speed="0.65s"
+              emptyColor="gray.200"
+              color="blue.500"
+              size="xl"
+            />
+            <Text fontSize="md" mt={3}>
+              AIが結果を予測中です...
+            </Text>
+          </Box>
         ) : (
           <Button type="submit" colorScheme="blue" size="lg" w="full">
             勝敗予測をする

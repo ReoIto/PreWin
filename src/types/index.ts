@@ -4,5 +4,16 @@ export type PredictionRequestData = {
 }
 
 export type PredictionResponseData = {
-  result: string
+  teams: [string, string]
+  detail: {
+    winner: string
+    loser: string
+    score: {
+      firstHalf: [number, number]
+      secondHalf: [number, number]
+    }
+    totalScore: [number, number]
+    isDraw: boolean
+    reason: string
+  }
 }
