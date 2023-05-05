@@ -29,7 +29,7 @@ export const MatchPrediction = () => {
     let winnerOrLoser: string[] = []
     if (teams.team1 === winner) {
       winnerOrLoser = ["WINNER", "LOSER"]
-    } else {
+    } else if (teams.team2 === winner) {
       winnerOrLoser = ["LOSER", "WINNER"]
     }
 
@@ -37,6 +37,7 @@ export const MatchPrediction = () => {
       return (
         <Box key={result}>
           <Text
+            color={result === "WINNER" ? "red.500" : "blue.500"}
             fontSize="4xl"
             fontWeight="bold"
             fontStyle="italic"
@@ -52,8 +53,8 @@ export const MatchPrediction = () => {
   const renderResultItem = (heading: string, text: string) => {
     return (
       <Box>
-        <Heading as="h3" size="md" textAlign="center" mt={3} fontWeight="bold">
-          {heading}
+        <Heading as="h3" size="" textAlign="center" mt={3} fontWeight="bold">
+          {`- ${heading} -`}
         </Heading>
         <Text
           fontSize="xl"
